@@ -1,0 +1,1051 @@
+define("appmsg/emotion/dom.js",["biz_common/dom/event.js"],function(t){
+"use strict";
+function e(t){
+if("string"==typeof t){
+document.querySelectorAll||!function(){
+var t=document.createStyleSheet(),e=function(e,n){
+var i,o=document.all,r=o.length,u=[];
+for(t.addRule(e,"foo:bar"),i=0;r>i&&!("bar"===o[i].currentStyle.foo&&(u.push(o[i]),
+u.length>n));i+=1);
+return t.removeRule(0),u;
+};
+document.querySelectorAll=function(t){
+return e(t,1/0);
+};
+}();
+var e=document.querySelectorAll(t);
+}else e=[t];
+return{
+el:e,
+on:function(t,e){
+return this.each(function(n){
+i.on(n,t,e);
+}),this;
+},
+hide:function(){
+return this.each(function(t){
+t.style.display="none";
+}),this;
+},
+show:function(){
+return this.each(function(t){
+t.style.display="block";
+}),this;
+},
+each:function(t){
+return n(this.el,t),this;
+},
+width:function(){
+return this.el[0].clientWidth;
+},
+css:function(t){
+return this.each(function(e){
+for(var n in t)e.style[n]=t[n];
+}),this;
+},
+attr:function(t,e){
+var n=this.el[0];
+return e?(n.setAttribute(t,e),this):n.getAttribute(t);
+},
+append:function(t){
+return t.el&&(t=t.el[0]),this.el[0].appendChild(t),this;
+},
+html:function(t){
+this.each(function(e){
+e.innerHTML=t;
+});
+}
+};
+}
+function n(t,e){
+for(var n=0,i=t.length;i>n;n++)e(t[n],n);
+}
+var i=t("biz_common/dom/event.js");
+return e.el=function(t){
+return document.createElement(t);
+},e.later=function(t){
+setTimeout(t,3);
+},e.log=function(){},e.each=n,e;
+});define("appmsg/my_comment_tpl.html.js",[],function(){
+return'<!-- 发表留言 -->\n<#if(window.new_appmsg){#>\n  <div id="js_cmt_mine" class="discuss_container_wrp" style="display:none;">\n    <div class="discuss_container editing access">\n        <div class="discuss_container_inner">\n          <div class="discuss_container_hd">\n            <h2 class="rich_media_title">\n                <#if(window.item_show_type == 10){#>\n                    <#=textPageTitle#>\n                <#}else{#>\n                    <#=window.msg_title.html(1)#>\n                <#}#>\n            </h2><!-- 标题要转义 -->\n            <span id="log"></span>\n            <div class="frm_textarea_box_wrp">\n                <span class="frm_textarea_box">\n                    <#if(window.friend_comment_enabled == 1){#>\n                    <!-- <textarea id="js_cmt_input" class="frm_textarea" placeholder="留言对朋友可见，被公众号筛选后，将对所有人可见。"></textarea> -->\n                    <textarea id="js_cmt_input" class="frm_textarea" placeholder="留言将由公众号筛选后显示，对所有人可见。"></textarea>\n                    <#}else{#>\n                    <textarea id="js_cmt_input" class="frm_textarea" placeholder="留言将由公众号筛选后显示，对所有人可见。"></textarea>\n                    <#}#>\n                    <div class="emotion_tool">\n                        <span class="emotion_switch" style="display:none;"></span>\n                        <span id="js_emotion_switch" class="pic_emotion_switch_wrp">\n                            <img class="pic_default" src="<#=window.icon_emotion_switch#>" alt="">\n                            <img class="pic_active" src="<#=window.icon_emotion_switch_active#>" alt="">\n                            <img class="pic_default_primary" src="<#=window.icon_emotion_switch_primary#>" alt="">\n                            <img class="pic_active_primary" src="<#=window.icon_emotion_switch_active_primary#>" alt="">\n                        </span>\n                    </div>\n                </span>\n            </div>\n            <div class="emotion_panel" id="js_emotion_panel">\n                <span class="emotion_panel_arrow_wrp" id="js_emotion_panel_arrow_wrp">\n                    <i class="emotion_panel_arrow arrow_out"></i>\n                    <i class="emotion_panel_arrow arrow_in"></i>\n                </span>\n                <div class="emotion_list_wrp" id="js_slide_wrapper">\n                    <!--<ul class="emotion_list"></ul>-->\n                    <!--<li class="emotion_item"><i class="icon_emotion"></i></li>-->\n                </div>\n                <ul class="emotion_navs" id="js_navbar">\n                    <!--<li class="emotion_nav"></li>-->\n                </ul>\n            </div>\n            <div class="discuss_btn_wrp"><a id="js_cmt_submit" class="btn btn_primary btn_discuss btn_disabled" href="##">留言</a></div>\n          </div>\n          <div class="discuss_container_bd">\n            <div class="" style="display:none">\n                <div class="mod_title_context">\n                    <strong class="mod_title">我的留言</strong>\n                </div>\n                <ul class="discuss_list" id="js_cmt_mylist"></ul>\n            </div>\n            <div class="weui-loadmore" id="js_mycmt_loading">\n                <i class="weui-loading"></i>\n                <span class="weui-loadmore__tips">正在加载</span>\n            </div>\n            <div id="js_cmt_toast" style="display: none;">\n                <div class="weui-mask_transparent"></div>\n                <div class="weui-toast">\n                    <i class="weui-icon-success-no-circle weui-icon_toast"></i>\n                    <p class="weui-toast__content">已留言</p>\n                </div>\n            </div>\n            <div class="weui-dialog__wrp weui-transition_opacity-hide" id="js_delete_panel_mobile">\n                <div class="weui-mask"></div>\n                <div class="weui-dialog">\n                    <div class="weui-dialog__bd">确定删除留言吗？</div>\n                    <div class="weui-dialog__ft">\n                    <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_default" id="js_delete_cancel_mobile">取消</a>\n                    <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" id="js_delete_confirm_mobile">删除</a>\n                    </div>\n                </div>\n            </div>\n          </div>\n        </div>\n    </div>\n  </div>\n<#}else{#>\n    <div id="js_cmt_mine" class="discuss_container editing access" style="display:none;">\n        <div class="discuss_container_inner">\n            <h2 class="rich_media_title"><#=window.msg_title.html(1)#></h2><!-- 标题要转义 -->\n            <span id="log"></span>\n            <div class="frm_textarea_box_wrp">\n                <span class="frm_textarea_box">\n                    <#if(window.friend_comment_enabled == 1){#>\n                    <!-- <textarea id="js_cmt_input" class="frm_textarea" placeholder="留言对朋友可见，被公众号筛选后，将对所有人可见。"></textarea> -->\n                    <textarea id="js_cmt_input" class="frm_textarea" placeholder="留言将由公众号筛选后显示，对所有人可见。"></textarea>\n                    <#}else{#>\n                    <textarea id="js_cmt_input" class="frm_textarea" placeholder="留言将由公众号筛选后显示，对所有人可见。"></textarea>\n                    <#}#>\n                    <div class="emotion_tool">\n                        <span class="emotion_switch" style="display:none;"></span>\n                        <span id="js_emotion_switch" class="pic_emotion_switch_wrp">\n                            <img class="pic_default" src="<#=window.icon_emotion_switch#>" alt="">\n                            <img class="pic_active" src="<#=window.icon_emotion_switch_active#>" alt="">\n                        </span>\n                        <div class="emotion_panel" id="js_emotion_panel">\n                            <span class="emotion_panel_arrow_wrp" id="js_emotion_panel_arrow_wrp">\n                                <i class="emotion_panel_arrow arrow_out"></i>\n                                <i class="emotion_panel_arrow arrow_in"></i>\n                            </span>\n                            <div class="emotion_list_wrp" id="js_slide_wrapper">\n                                <!--<ul class="emotion_list"></ul>-->\n                                <!--<li class="emotion_item"><i class="icon_emotion"></i></li>-->\n                            </div>\n                            <ul class="emotion_navs" id="js_navbar">\n                                <!--<li class="emotion_nav"></li>-->\n                            </ul>\n                        </div>\n                    </div>\n                </span>\n            </div>\n            <div class="discuss_btn_wrp"><a id="js_cmt_submit" class="btn btn_primary btn_discuss btn_disabled" href="##">留言</a></div>\n            <div class="discuss_list_wrp" style="display:none">\n                <div class="rich_tips with_line title_tips discuss_title_line">\n                    <span class="tips">我的留言</span>\n                </div>\n                <ul class="discuss_list" id="js_cmt_mylist"></ul>\n            </div>\n            <div class="rich_tips tips_global loading_tips" id="js_mycmt_loading">\n                <img src="<#=window.icon_loading_white#>" class="rich_icon icon_loading_white" alt="">\n                <span class="tips">加载中</span>\n            </div>\n            <div class="wx_poptips" id="js_cmt_toast" style="display:none;">\n                <img alt="" class="icon_toast" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGoAAABqCAYAAABUIcSXAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA3NpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoyMTUxMzkxZS1jYWVhLTRmZTMtYTY2NS0xNTRkNDJiOGQyMWIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MTA3QzM2RTg3N0UwMTFFNEIzQURGMTQzNzQzMDAxQTUiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MTA3QzM2RTc3N0UwMTFFNEIzQURGMTQzNzQzMDAxQTUiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NWMyOGVjZTMtNzllZS00ODlhLWIxZTYtYzNmM2RjNzg2YjI2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjIxNTEzOTFlLWNhZWEtNGZlMy1hNjY1LTE1NGQ0MmI4ZDIxYiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pmvxj1gAAAVrSURBVHja7J15rF1TFMbXk74q1ZKHGlMkJVIhIgg1FH+YEpEQJCKmGBpThRoSs5jVVNrSQUvEEENIhGiiNf9BiERICCFIRbUiDa2qvudbOetF3Tzv7XWGffa55/uS7593977n3vO7e5+199p7v56BgQGh0tcmvAUERREUQVEERREUQVEERREUQVEERREUQVEERREUQVEERREUQVEERVAUQVEERVAUQbVYk+HdvZVG8b5F0xj4RvhouB+eCy8KrdzDJc1RtAX8ILxvx98V1GyCSkN98Cx4z/95/Wn4fj6j6tUEeN4wkFSnw1MJqj5NhBfAuwaUHREUg4lqNMmePVsHll/HFhVfe1t3FwpJI8DXCCquDrCWNN4B6Tb4M3Z98aTPmTvh0YHl18PXw29yZiKejoPvcUD6E74yFBJbVDk6Bb7K8aP/Hb4c/tRzEYIqprPhSxzlf4Uvhb/0Xoig8qnHAJ3lqPMzfDH8XZ4LEpRf2sVdA5/sqPO9Qfop70UJyn+/boaPddT5yrq7VUUvTIVJI7q74MMddXR8NB1eXcYvhBpZm0s2w72/o86HFoKvLau/pYaXzjLMdUJ6y0LwtWV9CIIaXtvA8+G9HHV03u5q+K+yH47U0NoRngPv7KjzHDwTLj0bS1BDazfJJlcnOOostC6ysnCT+q80G/sIvFVgeW09D8FPVT0uoP7VfvAD8NjA8pqmuAN+OcYAjso0RbIZ8DGB5TVNcRO8JMaHY9SXSdfa3eeANJimWBLrA7JFiZwIXye+NMUV8CcxP2SRFjXefok7NRjSGZJlWUPvw2/wtNiQirSoXWyMsR28wR7AzzYM0oXw+Y7yK+CLJGeaoqjyrJSdZJD6Ov4+z5y6NJc0Az7NUecHydIUy+v60KNyQHoM3nKI1y7YCFiq0i7uBvgER52vDdKqWn9djhY1Dn4G3n6Ecqm2rF74dvgoR53S0hQxW9RJAZAGW5bSn58QJA27dQ7uIEedjywEX5NKVxCqsY6y+qA+LxFI4+yZ6oH0trWkNan80jygtIUsc5SflgAsDXgehfdx1KkkTRE76tN+Xue2jnTU0Ru1oIbvpt30bBtKhOp5yaaRkts0lic8V1i6dPcIRx2d/l8Y8XtNNEg7OOo8bl1kmmOKnDsO88CaYzejau0hWZqiL7C83oCH4SeTHvwV2BqqsHRVztSEYOmWF80NeXZT6Hd4KflResE9vCnBOlCyGfDNAstHTVPUDWoQ1t3iW+9WNizvlhfd4aerXd+ThqiMfNR6+9LvOOro5OY5JX2H4+F7HZD+kGzlamMgldWiirQsjcwWFbjmqZJteekJLK9pisvgL6RhKvuciZiwzrWWGapfrPy30kBVcSBIrw0aD3PU0XB6cehntq7rTMf7/2iQlktDVdXJLXlg6VjmiYBn6rWSTRCH6hvJ0hQrpcGq8oidsmHpTP8t8DGO9/vcWt9qabiqPgup1yKyQwvC2tSefZ73SSpNkUJ4PlLorlHZ+446nc8f3fIyywlJhwrTuwVSjBa1ccvSxN0hjjoK5xVrYZMd9V6XbFfgBukixTwGLg8sDam3dZR/wZ6L/dJlin1en8LS+bgpFbz3Ygvzu1J1HKxYNqxGpCmaCEo12rrBorD6LRp8UbpcdR5VWhTW35KlKd6QFqjuM2XzwlpnMxTvSkuUwuG/Xlg6NtPjbT6WFimF/VG6LEvXgn8QGDjMbBukVECFwhpoS+CQatfX2Q1q6H7wENHdrfCr0lKleEB9JyxNneus+VJpsVL9TwI6W65LovWIGl3KtVJaLv7LBwYTFEERFEVQFEERFEVQFEERFEVQFEERFEVQFEERFEVQFEERFFWq/hFgADUMN4RzT6/OAAAAAElFTkSuQmCC">\n                <p class="toast_content">已留言</p>\n            </div>\n        </div>\n    </div>\n<#}#>\n<div class="weui-webview-nav" style="display:none;" id="js_fake_bar">\n    <button class="weui-webview-nav__btn_goback" id="js_cmt_goback">goback</button>\n    <button class="weui-webview-nav__btn_forward weui-webview-nav__btn_disabled" disabled="disabled">forward</button>\n</div>\n';
+});define("biz_wap/utils/fakehash.js",["biz_common/dom/event.js"],function(t){
+"use strict";
+function s(t){
+t=t||location.hash.substr(1);
+var s,o,e,i,r=!1,c=[];
+for(s=0;s<h.length;s++)o=h[s],e=o[0],i=o[1],e!==a?("string"==typeof e&&e===t||e instanceof RegExp&&e.test(t))&&(i(n),
+r=!0):c.push(i);
+if(!r)for(s=0;s<c.length;s++)c[s](n,t);
+n=t;
+}
+var o=t("biz_common/dom/event.js"),h=[],a="__default_hash__",n=location.hash.substr(1);
+return o.on(window,"popstate",function(t){
+var o=a;
+t.state&&t.state.hash&&(o=t.state.hash),s(o);
+}),o.on(window,"hashchange",s),o.on(window,"load",function(){
+history.state&&history.state.hash&&s(history.state.hash);
+}),{
+val:function(){
+return history.state&&history.state.hash||location.hash.substr(1);
+},
+push:function(t){
+history.pushState?(history.pushState({
+hash:t
+},document.title,location.href),s(t)):location.hash=t;
+},
+replace:function(t){
+history.replaceState?(history.replaceState({
+hash:t
+},document.title,location.href),s(t)):this.push(t);
+},
+on:function(t,s){
+"function"==typeof t&&(s=t,t=a),h.push([t,s]);
+}
+};
+});define("appmsg/emotion/selection.js",[],function(e,n){
+"use strict";
+function t(e,n,t){
+if(!t&&e===n)return!1;
+if(e.compareDocumentPosition){
+var o=e.compareDocumentPosition(n);
+if(20===o||0===o)return!0;
+}else if(e.contains(n))return!0;
+return!1;
+}
+function o(e,n){
+var o=n.commonAncestorContainer||n.parentElement&&n.parentElement()||null;
+return o?t(e,o,!0):!1;
+}
+n.getSelection=function(){
+return document.selection?document.selection:(window.getSelection||document.getSelection)();
+},n.getRange=function(e){
+var n=getSelection();
+if(!n)return null;
+var t=void 0;
+return n.getRangeAt&&n.rangeCount?t=n.getRangeAt(0):n.getRangeAt||(t=n.createRange()),
+t?e&&o(e,t)?t:e?null:t:null;
+},n.setCursorToEnd=function(e){
+if(e){
+var n=getSelection();
+n.extend&&(n.extend(e,e.length),n.collapseToEnd&&n.collapseToEnd());
+}
+},n.contains=t;
+});define("appmsg/retry_ajax.js",["biz_wap/utils/ajax.js","biz_wap/jsapi/core.js"],function(require,exports,module,alert){
+"use strict";
+function Retry_ajax(e){
+checkAjaxDo(e),e&&(e.success=function(a){
+dealWithSucceed(a,e);
+},e.error=function(){
+dealWithFailed(e);
+}),ajax(e);
+}
+function checkAjaxDo(e){
+var a=isContainExceptLike(e,failedQueue),i=isContainAjax(e,failedQueue);
+-1===i&&a>-1&&failedQueue.splice(a,1);
+}
+function isContainExceptLike(e,a){
+var i=-1;
+for(var r in a){
+var t=a[r];
+if(e.url||-1!=e.url.indexOf("&like=")||-1!=t.url.indexOf("&like=")){
+if(!(e.url.indexOf("&like=")>-1&&t.url.indexOf("&like=")>-1))continue;
+if(removeLikeParam(e.url)!==removeLikeParam(t.url))continue;
+}else if(!t.url||t.url!==e.url)continue;
+if(e.data&&t.data){
+var u=e.data,n=t.data;
+if(!isEqualExceptLike(u,n))continue;
+}
+i=r;
+break;
+}
+return i;
+}
+function isContainAjax(e,a){
+var i=-1;
+for(var r in a){
+var t=a[r];
+if(e.url&&t.url&&e.url==t.url){
+if(e.data&&t.data){
+var u=e.data,n=t.data;
+if(!isEqual(u,n))continue;
+}
+i=r;
+break;
+}
+}
+return i;
+}
+function removeLikeParam(e){
+var a=e.indexOf("&like="),i=e.substring(0,a)+e.substring(a+7);
+return i;
+}
+function isEqualExceptLike(e,a){
+var i=Object.getOwnPropertyNames(e),r=Object.getOwnPropertyNames(a);
+if(i.length!=r.length)return!1;
+for(var t=0;t<i.length;t++){
+var u=i[t];
+if("like"!==u&&e[u]!==a[u])return!1;
+}
+return!0;
+}
+function isEqual(e,a){
+var i=Object.getOwnPropertyNames(e),r=Object.getOwnPropertyNames(a);
+if(i.length!=r.length)return!1;
+for(var t=0;t<i.length;t++){
+var u=i[t];
+if(e[u]!==a[u])return!1;
+}
+return!0;
+}
+function dealWithSucceed(res,obj){
+try{
+var data=eval("("+res+")");
+}catch(e){
+var data=!1;
+}
+if(data&&data.base_resp&&0===data.base_resp.ret){
+var findIndex=isContainExceptLike(obj,failedQueue);
+findIndex>-1&&failedQueue.splice(findIndex,1);
+}else dealWithFailed(obj);
+}
+function dealWithFailed(e){
+var a=isContainExceptLike(e,failedQueue);
+if(-1===a){
+if(e.failedTimes=1,failedQueue.length>=MAX_QUEUE_LEN)return;
+failedQueue.push(e);
+}else{
+var i=isContainAjax(e,failedQueue);
+if(i>-1){
+if(failedQueue[a].failedTimes++,e.failedTimes=failedQueue[a].failedTimes,e.failedTimes>MAX_FAILED_TIMES)return void failedQueue.splice(i,1);
+}else failedQueue.splice(i,1),e.failedTimes=1,failedQueue.push(e);
+}
+Retry_ajax(e);
+}
+var ajax=require("biz_wap/utils/ajax.js"),JSAPI=require("biz_wap/jsapi/core.js"),failedQueue=[],MAX_FAILED_TIMES=2,MAX_QUEUE_LEN=20;
+return Retry_ajax;
+});define("appmsg/comment_report.js",["biz_wap/utils/ajax.js","biz_common/dom/event.js","biz_wap/utils/storage.js","common/utils.js","biz_common/dom/offset.js"],function(e){
+"use strict";
+function t(){
+if(!m){
+m=!0,setTimeout(function(){
+m=!1;
+},20);
+var e=d.getInnerHeight(),t=window.pageYOffset||document.documentElement.scrollTop||document.body.scrollTop,i=p.querySelectorAll(".js_comment_item"),s=r.querySelectorAll(".js_comment_item");
+if(o=_.getOffset(p).offsetTop,n||(n=_.getOffset(r).offsetTop),s.length)for(var a=0;a<s.length&&n+s[a].offsetTop<t+e;a++)1!=s[a].getAttribute("data-hasreport")&&(s[a].setAttribute("data-hasreport",1),
+f.data.push({
+content_id:s[a].dataset.content_id,
+is_elected_comment:1*s[a].dataset.elected,
+is_friend_comment:1,
+scene:2
+}));
+if(i.length)for(var a=0;a<i.length&&o+i[a].offsetTop<t+e;a++)1!=i[a].getAttribute("data-hasreport")&&(i[a].setAttribute("data-hasreport",1),
+f.data.push({
+content_id:i[a].dataset.content_id,
+is_elected_comment:1,
+is_friend_comment:1*i[a].dataset.friend,
+scene:1
+}));
+c.set("comment_expose",f,Date.now()+6048e5);
+}
+}
+var o,n,m,i=e("biz_wap/utils/ajax.js"),s=e("biz_common/dom/event.js"),a=e("biz_wap/utils/storage.js"),d=e("common/utils.js"),c=new a("comment_expose"),_=e("biz_common/dom/offset.js"),p=document.getElementById("js_cmt_area"),r=document.getElementById("js_friend_cmt_area"),f={
+data:[],
+appmsgid:"",
+comment_id:"",
+idx:"",
+item_show_type:0,
+biz:""
+},u=function(e){
+e&&e.data&&e.data.length&&(l(e),c.remove("comment_expose"));
+},l=function(e){
+i({
+type:"post",
+url:"/mp/appmsg_comment?action=exposurecomment",
+data:{
+comment_id:e.comment_id,
+appmsgid:e.appmsgid,
+idx:e.idx,
+item_show_type:e.item_show_type,
+__biz:e.biz,
+data:JSON.stringify(e.data)
+},
+async:!1,
+timeout:2e3
+});
+};
+s.on(window,"scroll",t),s.on(window,"unload",function(){
+u(f);
+}),s.on(window,"load",function(){
+var e=c.getData("comment_expose");
+e&&e.comment_expose&&e.comment_expose.val&&e.comment_expose.val.appmsgid&&u(e.comment_expose.val),
+t();
+});
+var g=function(e){
+f.comment_id=e.comment_id,f.appmsgid=e.appmsgid,f.idx=e.idx,f.item_show_type=e.item_show_type||0,
+f.biz=e.biz,setTimeout(function(){
+t();
+});
+};
+return g;
+});define("appmsg/cmt_tpl.html.js",[],function(){
+return'<#if(window.new_appmsg){#>\n<li class="js_comment_item discuss_item cid<# if (is_from_me == 1) { #><#=my_id#><# } else { #><#=content_id#><# } #>" \n    id="cid<# if (is_from_me == 1) { #><#=my_id#><# } else { #><#=content_id#><# } #>" \n    data-elected="<#=report_elected#>" \n    data-friend="<#=report_friend#>" \n    data-content_id="<#=content_id#>"\n    >\n    <div class="discuss_item_hd">\n      <div class="user_info">\n          <div class="nickname_wrp">\n            <img class="avatar" src="<#=logo_url#>">\n            <strong class="nickname"><#=nick_name#><# if(is_from_friend == 1){ #>(朋友)<# } #></strong>\n            <# if(typeof is_top === \'number\' && is_top == 1){ #><span class="icon_appmsg_tag">置顶</span><# } #>\n          </div>\n      </div>\n      <div class="discuss_opr">\n          <# if (is_from_me == 1) { #>\n            <a class="discuss_opr_meta discuss_del js_del" data-my-id="<#=my_id#>" data-content-id="<#=content_id#>">删除</a>\n          <# } #>\n          <# if(is_elected == 1){ #>\n          <span class="discuss_opr_meta media_tool_meta meta_praise js_comment_praise <# if(like_status == 1){ #>praised<# } #>" data-status="<#=like_status#>" data-content-id=\'<#=content_id#>\' data-scene="<#=scene#>" data-my-id=\'<#=my_id#>\'>\n              <i class="icon_praise_gray"></i>\n              <span class="praise_num" data-num="<#=like_num#>" data-like="<#=like_status#>"><# if(like_num_format !== 0){ #><#=like_num_format#> <# } #></span>\n          </span>\n          <# } else { #>\n            <span class="discuss_opr_meta">未精选</span>\n          <# } #>\n      </div>\n    </div>\n\n    <div class="discuss_message">\n        <span class="discuss_status"><#=status#></span>\n        <div class="discuss_message_content js_comment_content" data-content="<#=content#>" data-my-id="<#=my_id#>"><#=content#></div>\n    </div>\n    <# if(reply_new && reply_new.reply_list && reply_new.reply_list.length > 0){ #>\n        <# for(var i = 0; i < reply_new.reply_list.length; i++){ #>\n            <div class="reply_result js_reply_item <# if (reply_new.reply_list[i].is_same) {#> reply_result_same <# } #>" <#if (i>=3 && type != \'mine\'){ #> style="display:none" <# } #> data-my-id="<#=my_id#>">\n                <div class="discuss_item_hd">\n                    <# if(reply_new.reply_list[i].is_from_author == 1){ #>\n                        <div class="user_info author_info">\n                        <div class="nickname_wrp">\n                            <div class="nickname">作者</div>\n                        </div>\n                        </div>\n                    <# } else { #>\n                        <div class="user_info">\n                            <div class="nickname_wrp">\n                            <img class="avatar" src="<#=logo_url#>">\n                            <strong class="nickname"><#=nick_name#></strong>\n                            </div>\n                        </div>\n                    <# } #>\n                    <div class="discuss_opr">\n                        <# if(reply_new.reply_list[i].reply_del_flag == 0){ #>\n                            <# if (reply_new.reply_list[i].is_from_me == 1) { #>\n                                <a class="discuss_opr_meta discuss_del js_reply_del" data-my-id="<#=my_id#>" data-content-id="<#=content_id#>" data-reply-id="<#=reply_new.reply_list[i].reply_id#>">删除</a>\n                            <# } #>\n                            <# if (reply_new.reply_list[i].reply_is_elected == 1){ #>\n                                <span class="discuss_opr_meta media_tool_meta meta_praise js_reply_praise <# if(reply_new.reply_list[i].reply_like_status == 1){ #>praised<# } #>" data-status="<#=reply_new.reply_list[i].reply_like_status#>" data-content-id="<#=content_id#>" data-my-id="<#=my_id#>" data-reply-id=\'<#=reply_new.reply_list[i].reply_id#>\' data-scene="<#=scene#>">\n                                    <i class="icon_praise_gray"></i>\n                                    <span class="praise_num"  data-num="<#=reply_new.reply_list[i].reply_like_num#>" data-like="<#=reply_new.reply_list[i].reply_like_status#>"><# if(reply_new.reply_list[i].reply_like_num_format !== 0){ #><#=reply_new.reply_list[i].reply_like_num_format#> <# } #></span>\n                                </span>\n                            <# } else { #>\n                                <span class="discuss_opr_meta js_reply_elect_status" data-reply-id=\'<#=reply_new.reply_list[i].reply_id#>\' data-my-id="<#=my_id#>">未精选</span>\n                            <# } #>\n                        <# } #>\n                    </div>\n                </div>\n                <div class="discuss_message">\n                        <# if(reply_new.reply_list[i].reply_del_flag == 1){ #>\n                            <div class="discuss_message_content discuss_message_del">此回复已被删除</div>\n                        <# } else { #>\n                            <div class="discuss_message_content js_reply_content" data-reply-id="<#=reply_new.reply_list[i].reply_id#>" data-my-id="<#=my_id#>" data-content="<#=reply_new.reply_list[i].content#>"><#=reply_new.reply_list[i].content#></div>\n                        <# } #>\n                </div>\n            </div>\n        <# } #>\n    <# } #>\n    <# if(replyListCount > 3 && type != \'mine\'){ #>\n    <div class="discuss_extra_info js_extend_comment discuss_more_access" data-my-id="<#=my_id#>" data-num="<#=replyListCount-3#>">余下<#= replyListCount-3 #>条</div>\n    <# } #>\n    <!-- 上线前暂时隐藏回复入口 -->\n    <# if (supportReply) { #>\n    <p class="discuss_extra_info js_reply_div" data-my-id="<#=my_id#>" <#if (replyListCount > 3 && type != \'mine\'){ #> style="display:none" <# } #>>\n        <a class="js_comment_reply" data-my-id="<#=my_id#>" data-content-id="<#=content_id#>">回复</a>\n    </p>\n    <# } #>\n</li>\n<#}else{#>\n<li class="js_comment_item discuss_item cid<# if (is_from_me == 1) { #><#=my_id#><# } else { #><#=content_id#><# } #>" id="cid<# if (is_from_me == 1) { #><#=my_id#><# } else { #><#=content_id#><# } #>" data-elected="<#=report_elected#>" data-friend="<#=report_friend#>" data-content_id="<#=content_id#>">\n    <# if(is_elected == 1){ #>\n    <div class="discuss_opr">\n        <span class="media_tool_meta tips_global meta_praise js_comment_praise <# if(like_status == 1){ #>praised<# } #>" data-status="<#=like_status#>" data-content-id=\'<#=content_id#>\' data-scene="<#=scene#>">\n            <i class="icon_praise_gray"></i>\n            <span class="praise_num"  data-num="<#=like_num#>"  data-like="<#=like_status#>"><# if(like_num_format !== 0){ #><#=like_num_format#> <# } #></span>\n        </span>\n    </div>\n    <# } #>\n    <div class="user_info">\n        <strong class="nickname"><#=nick_name#><# if(is_from_friend == 1){ #>(朋友)<# } #></strong>\n        <img class="avatar" src="<#=logo_url#>">\n        <# if(typeof is_top === \'number\' && is_top == 1){ #><span class="icon_discuss_top">置顶</span><# } #>\n    </div>\n    <div class="discuss_message">\n        <span class="discuss_status"><#=status#></span>\n        <div class="discuss_message_content"><#=content#></div>\n    </div>\n    <p class="discuss_extra_info">\n        <#=time#>               \n        <# if (is_from_me == 1) { #>\n        <a class="discuss_del js_del" data-my-id="<#=my_id#>" data-content-id="<#=content_id#>">删除</a>\n        <# } #>\n    </p>\n    <# if(reply_new && reply_new.reply_list && reply_new.reply_list.length > 0){ #>\n        <div class="reply_result">\n            <div class="discuss_opr">\n                <span class="media_tool_meta tips_global meta_praise js_reply_praise <# if(reply_new.reply_list[0].reply_like_status == 1){ #>praised<# } #>" data-status="<#=reply_new.reply_list[0].reply_like_status#>" data-content-id="<#=content_id#>" data-reply-id=\'<#=reply_new.reply_list[0].reply_id#>\' data-scene="<#=scene#>">\n                    <i class="icon_praise_gray"></i>\n                    <span class="praise_num"  data-num="<#=reply_new.reply_list[0].reply_like_num#>" data-like="<#=reply_new.reply_list[0].reply_like_status#>"><# if(reply_new.reply_list[0].reply_like_num_format !== 0){ #><#=reply_new.reply_list[0].reply_like_num_format#> <# } #></span> \n                </span>\n            </div>\n            <#if(window.new_appmsg){#>\n            <div class="nickname">作者</div>\n            <#}else{#>\n            <div class="nickname">作者回复</div>\n            <# } #>\n            <div class="discuss_message">\n                <div class="discuss_message_content"><#=reply_new.reply_list[0].content#></div>\n            </div>\n            <p class="discuss_extra_info"><#=reply_new.reply_list[0].time#></p>\n        </div>\n    <# } #>\n        \n</li>\n<#}#>\n';
+});define("biz_common/base64.js",[],function(r,t,n){
+"use strict";
+var e,c="2.1.9";
+if("undefined"!=typeof n&&n.exports)try{}catch(o){}
+var u="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",a=function(r){
+for(var t={},n=0,e=r.length;e>n;n++)t[r.charAt(n)]=n;
+return t;
+}(u),h=String.fromCharCode,i=function(r){
+if(r.length<2){
+var t=r.charCodeAt(0);
+return 128>t?r:2048>t?h(192|t>>>6)+h(128|63&t):h(224|t>>>12&15)+h(128|t>>>6&63)+h(128|63&t);
+}
+var t=65536+1024*(r.charCodeAt(0)-55296)+(r.charCodeAt(1)-56320);
+return h(240|t>>>18&7)+h(128|t>>>12&63)+h(128|t>>>6&63)+h(128|63&t);
+},f=/[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g,A=function(r){
+return r.replace(f,i);
+},d=function(r){
+var t=[0,2,1][r.length%3],n=r.charCodeAt(0)<<16|(r.length>1?r.charCodeAt(1):0)<<8|(r.length>2?r.charCodeAt(2):0),e=[u.charAt(n>>>18),u.charAt(n>>>12&63),t>=2?"=":u.charAt(n>>>6&63),t>=1?"=":u.charAt(63&n)];
+return e.join("");
+},g=function(r){
+return r.replace(/[\s\S]{1,3}/g,d);
+},s=e?function(r){
+return(r.constructor===e.constructor?r:new e(r)).toString("base64");
+}:function(r){
+return g(A(r));
+},C=function(r,t){
+return t?s(String(r)).replace(/[+\/]/g,function(r){
+return"+"==r?"-":"_";
+}).replace(/=/g,""):s(String(r));
+},l=function(r){
+return C(r,!0);
+},p=new RegExp(["[À-ß][-¿]","[à-ï][-¿]{2}","[ð-÷][-¿]{3}"].join("|"),"g"),S=function(r){
+switch(r.length){
+case 4:
+var t=(7&r.charCodeAt(0))<<18|(63&r.charCodeAt(1))<<12|(63&r.charCodeAt(2))<<6|63&r.charCodeAt(3),n=t-65536;
+return h((n>>>10)+55296)+h((1023&n)+56320);
+
+case 3:
+return h((15&r.charCodeAt(0))<<12|(63&r.charCodeAt(1))<<6|63&r.charCodeAt(2));
+
+default:
+return h((31&r.charCodeAt(0))<<6|63&r.charCodeAt(1));
+}
+},b=function(r){
+return r.replace(p,S);
+},v=function(r){
+var t=r.length,n=t%4,e=(t>0?a[r.charAt(0)]<<18:0)|(t>1?a[r.charAt(1)]<<12:0)|(t>2?a[r.charAt(2)]<<6:0)|(t>3?a[r.charAt(3)]:0),c=[h(e>>>16),h(e>>>8&255),h(255&e)];
+return c.length-=[0,0,2,1][n],c.join("");
+},F=function(r){
+return r.replace(/[\s\S]{1,4}/g,v);
+},j=e?function(r){
+return(r.constructor===e.constructor?r:new e(r,"base64")).toString();
+}:function(r){
+return b(F(r));
+},m=function(r){
+return j(String(r).replace(/[-_]/g,function(r){
+return"-"==r?"+":"/";
+}).replace(/[^A-Za-z0-9\+\/]/g,""));
+};
+return{
+VERSION:c,
+atob:F,
+btoa:g,
+fromBase64:m,
+toBase64:C,
+utob:A,
+encode:C,
+encodeURI:l,
+btou:b,
+decode:m
+};
+});define("appmsg/weapp_common.js",["biz_wap/utils/ajax.js","biz_wap/jsapi/core.js"],function(e,p,a,n){
+"use strict";
+function o(e){
+return e.indexOf(h)>-1?e:""+e+h;
+}
+function t(){
+var e=navigator.userAgent.match(/MicroMessenger\/(\d+)\.(\d+)\.(\d+)/);
+if(e){
+var p=Number(e[1]),a=Number(e[2]),n=Number(e[3]);
+p>6?w.canJumpOnTap=!0:6===p&&a>5?w.canJumpOnTap=!0:6===p&&5===a&&n>=3&&(w.canJumpOnTap=!0);
+}else navigator.userAgent.match(/MicroMessenger\//)||(w.isNonWechat=!0);
+r();
+}
+function r(){
+try{
+w.appidSnInfo=JSON.parse(window.weapp_sn_arr_json).weapp_card_list;
+}catch(e){
+w.appidSnInfo=[];
+}
+if(!w.appidSnInfo||0==w.appidSnInfo.length)return w.getInfoState=1,void i();
+for(var p={
+__biz:window.biz||"",
+mid:window.mid||"",
+idx:window.idx||"",
+uin:window.uin||"",
+key:window.key||"",
+pass_ticket:window.pass_ticket||"",
+weapp_num:w.appidSnInfo.length
+},a={},n={},o=0;o<p.weapp_num;o++){
+var t=w.appidSnInfo[o].appid,r=w.appidSnInfo[o].sn;
+a[t]?a[t].push(o):(a[t]=[o],p["weapp_appid_"+o]=w.appidSnInfo[o].appid,w.appidSnDict[t]=r),
+n[r]?n[r].push(o):(n[r]=[o],p["weapp_sn_"+o]=w.appidSnInfo[o].sn);
+}
+var c="/mp/appmsg_weapp?action=batch_get_weapp";
+for(var s in p)c+="&"+s+"="+encodeURIComponent(p[s]);
+l({
+url:c,
+type:"GET",
+dataType:"json",
+async:!0,
+success:function(e){
+try{
+if(console.log("weapp_common success:",e),w.appidInfoResp=e,e.base_resp.ret)throw new Error("Fetch weapp info but get ret="+e.base_resp.ret);
+w.data={
+infoMap:{},
+appid:e.appid||"",
+appmsg_compact_url:e.appmsg_compact_url||"",
+pathArgs:"appid="+encodeURIComponent(e.appid)+(e.appmsg_compact_url?"&appmsg_compact_url="+encodeURIComponent(e.appmsg_compact_url):"")
+};
+for(var p=e.weapp_info,a=0;a<p.length;a++){
+var n=p[a].weapp_appid;
+w.data.infoMap[n]=p[a];
+}
+w.getInfoState=4;
+}catch(o){
+w.getInfoState=3,w.appidInfoCatchErr=o;
+}
+i();
+},
+error:function(){
+w.getInfoState=2,i();
+}
+});
+}
+function i(){
+if(1==w.getInfoState||2==w.getInfoState)for(var e=0,p=w.appInfoErrQueue.length;p>e;e++){
+var a=w.appInfoErrQueue[e];
+"function"==typeof a&&a({
+code:w.getInfoState
+});
+}else if(3==w.getInfoState)for(var e=0,p=w.appInfoErrQueue.length;p>e;e++){
+var a=w.appInfoErrQueue[e];
+"function"==typeof a&&a({
+code:w.getInfoState,
+resp:w.appidInfoResp,
+catchErr:w.appidInfoCatchErr
+});
+}else if(4==w.getInfoState)for(var e=0,p=w.appInfoSucQueue.length;p>e;e++){
+var a=w.appInfoSucQueue[e];
+"function"==typeof a&&a({
+resp:w.appidInfoResp,
+data:w.data
+});
+}
+w.appInfoErrQueue=[],w.appInfoSucQueue=[];
+}
+function c(e){
+console.log("getAppidInfo",w),1!=w.getInfoState&&2!=w.getInfoState||"function"!=typeof e.onError?3==w.getInfoState&&"function"==typeof e.onError?e.onError({
+code:w.getInfoState,
+resp:w.appidInfoResp,
+catchErr:w.appidInfoCatchErr
+}):4==w.getInfoState&&"function"==typeof e.onSuccess?e.onSuccess({
+resp:w.appidInfoResp,
+data:w.data
+}):("function"==typeof e.onSuccess&&w.appInfoSucQueue.push(e.onSuccess),"function"==typeof e.onError&&w.appInfoErrQueue.push(e.onError)):e.onError({
+code:w.getInfoState
+});
+}
+function s(e,p){
+var a={
+__biz:window.biz||"",
+mid:window.mid||"",
+idx:window.idx||"",
+weapp_appid:e.appid||"",
+weapp_sn:w.appidSnDict[e.appid]||"",
+path:e.path||""
+},n="/mp/appmsg_weapp?action=get_wxa_code";
+for(var o in a)n+="&"+o+"="+encodeURIComponent(a[o]);
+l({
+url:n,
+type:"GET",
+dataType:"json",
+async:!0,
+success:function(e){
+e.base_resp&&0===e.base_resp.ret?p&&p(e.url):p&&p();
+},
+error:function(){
+p&&p();
+}
+});
+}
+function f(e){
+if(!e)return"";
+var p="",a=e.indexOf("?"),n=w.data&&w.data.pathArgs?w.data.pathArgs:"";
+return p=a>=0?e.slice(0,a)+(a>0?".html":"")+e.slice(a)+"&"+n:e+(""!==e?".html?":"?")+n,
+p.replace(/&amp;/g,"&");
+}
+function u(e){
+var p="",a=e.indexOf("?");
+return p=e.slice(0,a)+(a>0?".html":"")+e.slice(a);
+}
+function d(e){
+e=e||{};
+var p;
+if(e.options)p=e.options,p.relativeURL&&(p.relativeURL=p.relativeURL.replace(/&amp;/g,"&"),
+p.relativeURL.indexOf(".html")<0&&(p.relativeURL=f(p.relativeURL)));else if(e.appid&&(w.data||e.cps_weapp_username)){
+var a;
+e.cps_weapp_username?(a={},a.weapp_username=e.cps_weapp_username,a.app_version=e.cps_weapp_version):a=w.data.infoMap[e.appid],
+a&&(p={
+userName:a.weapp_username,
+scene:e.scene,
+sceneNote:e.sceneNote,
+relativeURL:f(e.path)
+},void 0!==a.app_version&&(p.appVersion=a.app_version),e.cps_weapp_username&&(p.relativeURL=u(e.path)));
+}
+p&&(e.privateExtraData&&(p.privateExtraData=e.privateExtraData),e.sourceAppId&&(p.sourceAppId=e.sourceAppId),
+p.scene=p.scene||1058,p.appVersion=p.appVersion||1,p.userName=o(p.userName),console.log("weapp257",p),
+w.canJumpOnTap?I.invoke("openWeApp",p,function(p){
+"system:function_not_exist"===p.err_msg?w.isNonWechat?("function"!=typeof e.beforeNonWechatWarn||e.beforeNonWechatWarn()!==!1)&&_():("function"!=typeof e.beforeJumpBackupPage||e.beforeJumpBackupPage()!==!1)&&m(e.appid):"function"==typeof e.onJsapiCallback&&e.onJsapiCallback(p);
+}):w.isNonWechat?("function"!=typeof e.beforeNonWechatWarn||e.beforeNonWechatWarn()!==!1)&&_():("function"!=typeof e.beforeJumpBackupPage||e.beforeJumpBackupPage()!==!1)&&m(e.appid));
+}
+function m(e){
+location.href="https://mp.weixin.qq.com/mp/waerrpage?type=upgrade&appid="+encodeURIComponent(e)+"#wechat_redirect";
+}
+function _(){
+setTimeout(function(){
+n("请在微信内打开小程序");
+},0);
+}
+function g(e){
+var p={
+userNames:[o(e)]
+};
+I.invoke("preloadMiniProgramContacts",p),I.invoke("preloadMiniProgramEnv",p);
+}
+var l=e("biz_wap/utils/ajax.js"),I=e("biz_wap/jsapi/core.js"),w={
+canJumpOnTap:!1,
+isNonWechat:!1,
+data:null,
+appidInfoResp:null,
+appidInfoCatchErr:null,
+appInfoSucQueue:[],
+appInfoErrQueue:[],
+appidSnInfo:[],
+appidSnDict:{},
+getInfoState:0
+},h="@app";
+return t(),{
+canJumpOnTap:w.canJumpOnTap,
+isNonWechat:w.isNonWechat,
+getAppidInfo:c,
+getAppidCode:s,
+appidSnInfo:w.appidSnInfo,
+getRelativeURL:f,
+jumpUrl:d,
+preloadMiniProgram:g
+};
+});define("pages/weapp_tpl.html.js",[],function(){
+return'<span class="weapp_card app_context pages_reset appmsg_card_context appmsg_card_active">\n    <span class="weapp_card_bd">\n        <span class="weapp_card_profile flex_context">\n            <span class="radius_avatar weapp_card_avatar">\n                <img src="<#=avatar#>">\n            </span>\n            <span class="flex_bd">\n              <span class="weapp_card_nickname_wrp">\n                <span class="guarantee_icon">交易担保</span>\n                <span class="weapp_card_nickname"><#=nickname#></span>\n              </span>\n            </span>\n        </span>\n        <span class="weapp_card_info">\n            <span class="weapp_card_title"><#=title#></span>\n            <span class="weapp_card_thumb_wrp" style="background-image:url(<#=imageUrl#>);"></span>\n        </span>\n    </span>\n    <span class="weapp_card_ft">\n        <span class="weapp_card_logo">小程序</span>\n    </span>\n</span>\n';
+});define("appmsg/appmsg_relate_video.js",["appmsg/log.js","biz_wap/utils/ajax.js","rt/appmsg/getappmsgext.rt.js"],function(e){
+"use strict";
+function _(e){
+console.log(e);
+var _={
+biz:"",
+appmsg_type:"",
+mid:"",
+sn:"",
+idx:"",
+scene:"",
+title:"",
+ct:"",
+abtest_cookie:"",
+devicetype:"",
+version:"",
+is_need_ticket:0,
+is_need_ad:0,
+comment_id:"",
+is_need_reward:0,
+both_ad:0,
+reward_uin_count:0,
+send_time:"",
+msg_daily_idx:"",
+is_original:0,
+is_only_read:0,
+req_id:"",
+pass_ticket:"",
+is_temp_url:0,
+more_read_type:0,
+rtId:"",
+rtKey:"",
+appmsg_like_type:1,
+related_video_sn:"",
+vid:"",
+related_video_num:3,
+is_pay_subscribe:0,
+pay_subscribe_uin_count:0,
+has_red_packet_cover:0,
+video_seq:"",
+onSuccess:function(){},
+onError:function(){}
+};
+for(var r in e)e.hasOwnProperty(r)&&(_[r]=e[r]);
+s({
+url:"/mp/related_video?f=json",
+data:{
+r:Math.random(),
+__biz:_.biz,
+appmsg_type:_.appmsg_type,
+mid:_.mid,
+sn:_.sn,
+idx:_.idx,
+scene:_.scene,
+ct:_.ct,
+abtest_cookie:_.abtest_cookie,
+version:_.version.htmlDecode(),
+is_need_ticket:_.is_need_ticket,
+is_need_ad:_.is_need_ad,
+comment_id:_.comment_id,
+is_need_reward:_.is_need_reward,
+both_ad:_.both_ad,
+reward_uin_count:_.is_need_reward?_.reward_uin_count:0,
+send_time:_.send_time,
+msg_daily_idx:_.msg_daily_idx,
+is_original:_.is_original,
+is_only_read:_.is_only_read,
+req_id:_.req_id,
+pass_ticket:_.pass_ticket,
+is_temp_url:_.is_temp_url,
+item_show_type:_.item_show_type,
+tmp_version:1,
+more_read_type:_.more_read_type,
+appmsg_like_type:_.appmsg_like_type,
+related_video_sn:_.related_video_sn,
+vid:_.vid,
+is_pay_subscribe:_.is_pay_subscribe,
+pay_subscribe_uin_count:_.pay_subscribe_uin_count,
+has_red_packet_cover:_.has_red_packet_cover,
+video_seq:_.video_seq,
+related_video_num:_.related_video_num
+},
+type:"POST",
+dataType:"json",
+rtId:_.rtId,
+rtKey:_.rtKey,
+rtDesc:t,
+async:!0,
+success:function(e){
+console.info("[(评论、点赞、赞赏) 响应请求]: ",new Date,e),i("[Appmsg] success get async data"),
+"function"==typeof _.onSuccess&&_.onSuccess(e);
+},
+error:function(){
+i("[Appmsg] error get relate video data, biz="+_.biz+", mid="+_.mid),"function"==typeof _.onError&&_.onError();
+}
+});
+}
+var i=e("appmsg/log.js"),s=e("biz_wap/utils/ajax.js"),t=e("rt/appmsg/getappmsgext.rt.js");
+return{
+getData:_
+};
+});define("pages/tpl/next_play_video.html.js",[],function(){
+return'<# list.forEach(function (item, idx) { #>\n  <li  data-idx="<#=idx#>" data-url="<#=item.url#>" data-vid="<#=item.vid#>" data-hasreport="1" class="js_video_item video__more-item">    \n    <div class="video__more-item-wrp">   \n        <!-- <div class="video__more-image-wrp"> -->\n            <div class="video__more-image" style="background-image:url(<#=item.cover#>)">  \n              <img src="<#=item.cover#>" alt="" class="video__more-image-invisible js_relate_cover_img" crossorigin="anonymous">  \n              <div class="video__more-duration_wrp">\n                <div class="video__more-duration_icon"></div>\n                  <span class="video__more-duration"><#=item.formatDuration#></span>\n              </div>\n              \n              <!-- 蒙层 -->\n              <div class="video__more-image_mask-layer"></div>   \n            </div> \n        <!-- </div> -->\n        <div class="video__more-desc-wrp">\n          <div class="video__more-desc"><#=item.title#></div>\n          <div class="video__more-detail">\n              <!-- <div class="video__more-source"><#=item.srcDisplayName#></div> -->\n              <div class="video__more-source">播放<#=item.read_num#></div>\n              <div class="video__more-source spacing_left"><#=item.like_num#>位朋友看过</div>\n          </div>\n        </div>    \n    </div>  \n  </li> \n<# }); #>';
+});define("pages/relate_video_abtest_b_tpl.html.js",[],function(){
+return'<# list.forEach(function (item, idx) { #>\n  <li class="video__relate-item js_video_item" data-idx="<#=item.realIdx#>" data-url="<#=item.url#>" data-vid="<#=item.vid#>">\n    \n    <div class="video__relate-item-wrp">\n    <div class="video__relate-image js_relate_cover" style="background-image:url(<#=item.cover#>)">\n      <#if(item.album && item.is_playing > 0) {#>\n      <!-- 正在播放 -->\n      <div class="current-play-tag"></div>\n      <#}#>  \n      <img src="<#=item.cover#>" alt="" class="video__relate-image-invisible js_relate_cover_img" crossorigin="anonymous">\n      <span class="video__relate-duration"><#=item.formatDuration#></span>\n    </div>\n      <div class="video__relate-desc"><#=item.title#></div>\n    </div>\n  </li>\n<# }); #>\n';
+});define("pages/relate_video_tpl.html.js",[],function(){
+return'<# list.forEach(function (item, idx) { #>\n  <li class="video__relate-item js_video_item" data-idx="<#=idx#>" data-url="<#=item.url#>" data-vid="<#=item.vid#>">\n    \n    <div class="video__relate-item-wrp">\n	  <div class="video__relate-image js_relate_cover" style="background-image:url(<#=item.cover#>)">\n      <#if(item.album && item.is_playing > 0) {#>\n      <!-- 正在播放 -->\n      <div class="current-play-tag"></div>\n      <#}#>  \n      <img src="<#=item.cover#>" alt="" class="video__relate-image-invisible js_relate_cover_img" crossorigin="anonymous">\n      <span class="video__relate-duration"><#=item.formatDuration#></span>\n	  </div>\n      <div class="video__relate-desc"><#=item.title#></div>\n    </div>\n  </li>\n<# }); #>\n';
+});function _typeof(e){
+return e&&"undefined"!=typeof Symbol&&e.constructor===Symbol?"symbol":typeof e;
+}
+var _extends=Object.assign||function(e){
+for(var t=1;t<arguments.length;t++){
+var n=arguments[t];
+for(var a in n)Object.prototype.hasOwnProperty.call(n,a)&&(e[a]=n[a]);
+}
+return e;
+};
+define("appmsg/reward_entry.js",["biz_wap/ui/weui.js","biz_common/dom/event.js","biz_wap/utils/ajax.js","biz_wap/jsapi/core.js","rt/appmsg/getappmsgext.rt.js","biz_wap/utils/mmversion.js","appmsg/appmsgext.js","appmsg/open_url_with_webview.js","common/utils.js","biz_wap/utils/device.js","appmsg/loading.js","common/comm_report.js","appmsg/pay_read_utils.js"],function(e,t,n,a){
+"use strict";
+function r(e){
+e&&(e.style.display="block");
+}
+function i(e){
+e&&(e.style.display="none");
+}
+function d(e){
+v.getData({
+biz:biz,
+appmsg_type:appmsg_type,
+mid:mid,
+sn:sn,
+idx:idx,
+pass_ticket:window.pass_ticket,
+scene:T.scene,
+title:T.title,
+ct:ct,
+devicetype:T.devicetype,
+version:T.version,
+is_need_reward:T.is_need_reward,
+reward_uin_count:T.is_need_reward?3*p:0,
+send_time:T.send_time||"",
+item_show_type:window.item_show_type||"",
+rtId:T.appmsgextRtId,
+rtKey:T.appmsgextRtKey,
+is_pay_subscribe:window.isPaySubscribe,
+pay_subscribe_uin_count:window.isPaySubscribe?3*k.getCountPerLine():0,
+onSuccess:function(t){
+t&&(e||(E.rewardLink&&m.off(E.rewardLink,"click",W),E.authorAvatarLink&&m.off(E.authorAvatarLink,"click",C),
+H=[],o({
+reward_total:t.reward_total_count,
+reward_head_imgs:t.reward_head_imgs||[],
+can_reward:t.can_reward,
+timestamp:t.timestamp,
+reward_author_head:t.reward_author_head,
+rewardsn:t.rewardsn,
+can_whisper:t.can_whisper
+})),console.log("reloadRewardData:",t,e),k.init(t.pay_subscribe_info,{
+rewardTotal:t.reward_total_count,
+rewardTotalCut:t.is_reward_total_count_cut
+},!0));
+},
+onError:function(){}
+});
+}
+function s(e,t){
+var n=function(){
+P.src=t+"&qrcode_timestamp="+1*new Date+"#wechat_redirect";
+},r=null;
+return function(t){
+if("0"==T.user_can_reward)return void a("你已成为该公众号的黑名单用户，暂时无法赞赏。");
+if(t.preventDefault(),T.isWindowsWechat){
+var i=function(){
+var e="js_author_reward_qrcode",t="reward_pop_show",a=document.getElementById(e);
+if(a.classList.contains(t))return{
+v:void 0
+};
+n(),r=setInterval(n,12e4),a.classList[E.rewardLink.getBoundingClientRect().top<222?"add":"remove"]("reward_pop_bottom"),
+a.classList.add(t);
+var i=function d(n){
+if(a.classList.contains(t)){
+for(var i=n.target;null!==i&&i.id!==e;)i=i.parentNode;
+(null===i||i.id!==e)&&(a.classList.remove(t),clearInterval(r),r=null,m.off(window,"click",d));
+}
+};
+setTimeout(function(){
+m.on(window,"click",i);
+},1);
+}();
+if("object"===("undefined"==typeof i?"undefined":_typeof(i)))return i.v;
+}else-1==e.indexOf("&__tc=1")&&window.__addIdKeyReport?window.__addIdKeyReport(T.likeHeadId,T.likeHeadKey):window.__addIdKeyReport&&window.__addIdKeyReport(T.likeBtnId,T.likeBtnKey),
+f.invoke("openUrlWithExtraWebview",{
+url:e,
+openType:1
+},function(t){
+t.err_msg.indexOf(":ok")>-1||(location.href=e);
+});
+};
+}
+function o(e){
+var t=window.innerWidth||document.documentElement.innerWidth,n=(Math.ceil((b.getInnerHeight()-188)/42)+1)*Math.floor((t-15)/42);
+_="http://mp.weixin.qq.com/mp/reward?act=getrewardheads&__biz="+biz+"&appmsgid="+mid+"&idx="+idx+"&sn="+sn+"&offset=0&count="+n+"&source=1#wechat_redirect";
+var a="#wechat_redirect",o="";
+o="https://mp.weixin.qq.com/mp/author?action=show&__biz="+biz+"&appmsgid="+mid+"&timestamp="+e.timestamp+"&author_id="+T.author_id+"&idx="+idx+"&scene="+T.authorPageScene+"&rscene="+T.authorPageRscene+"&from_scene="+window.source+"&from_subscene="+window.subscene+"&from_enterid="+window.enterid+"&from_sessionid="+window.sessionid+"&is_fans="+e.isFans,
+e.rewardsn&&(o+="&rewardsn="+e.rewardsn),o+=a,-1==navigator.userAgent.indexOf("Android")||T.author_id||(o="https://mp.weixin.qq.com/bizmall/reward?act=showpage&__biz="+biz+"&appmsgid="+mid+"&idx="+idx+"&sn="+sn+"&timestamp="+e.timestamp+"&showwxpaytitle=1&rewardsn="+e.rewardsn+a);
+var u=E.rewardLink,v=E.authorAvatarLink;
+if(!F&&b.listenStateChange({
+cb:function(e){
+if("onResume"==e.state_change||"onResume"==e.state)if(u){
+var t=(new Date).valueOf();
+if(-1!=navigator.userAgent.indexOf("Android")&&localStorage.getItem("lastOnresumeTime")&&t-parseInt(localStorage.getItem("lastOnresumeTime"))<=B)return;
+localStorage.setItem("lastOnresumeTime",t),g.isAndroid&&!T.author_id&&f.invoke("setNavigationBarColor",{
+actionCode:"1"
+}),d();
+}else d(!0);
+}
+}),F=!0,u){
+var x="/mp/authorreward?action=getqrcode&author_id="+T.author_id+"&rewardsn="+e.rewardsn+"&timestamp="+e.timestamp+"&__biz="+biz+"&appmsgid="+mid+"&idx="+idx+"&size=160";
+if(W=s(o.replace(a,"&__tc=1"+a),x),C=s(o,x),m.on(u,"click",W),T.author_id&&1==e.can_reward&&v&&m.on(v,"click",C),
+1==e.can_reward&&T.author_id&&E.reward){
+r(document.getElementById("js_reward_author")),r(E.authorAvatarLink),E.rewardAuthorHead&&E.rewardAuthorHead.setAttribute("src",e.reward_author_head),
+E.reward.classList.add("reward_area_primary");
+var I=E.rewardLinkText;
+I&&(I.innerText="喜欢作者",Math.random()<.05?I.innerText="稀罕作者":Math.random()>.05&&Math.random()<.1&&(I.innerText="钟意作者")),
+E.rewardTotalText&&(E.rewardTotalText.innerText="人喜欢"),T.isWindowsWechat&&E.reward.classList.add("reward_area_win"),
+1*item_show_type!==5&&e.can_whisper?N():q();
+}
+}
+L=e.reward_head_imgs;
+var j=c();
+E.reward&&(T.author_id||g.isAndroid)&&1==e.can_reward?(r(E.reward),m.on(window,"load",function(){
+l&&(m.off(window,"scroll",l),m.on(window,"scroll",l));
+})):i(E.reward);
+var k=document.getElementById("js_reward_inner");
+!window.isPaySubscribe&&k&&j>0&&r(k);
+var A=[].concat(L),M=document.getElementById("js_reward_total");
+if(z=16*p,H=[].concat(L),M)if(M.innerText=e.reward_total,T.isWindowsWechat){
+var R=M.parentNode;
+R.dataset.hasEvent||!function(){
+var t=document.getElementById("js_reward_pagination"),n=t.getElementsByClassName("js_reward_pagination_curpage")[0],a=Math.ceil(e.reward_total/z),d=1,s=!0,o=document.getElementById("js_reward_list"),c=function(t,n){
+for(var r=(t-1)*z,i=s?3*p:0,d=document.createDocumentFragment(),c=r+i,l=t===a?e.reward_total:t*z;l>c;c++)w(d,n?window.defaultAvatarUrl:H[c]);
+return!s&&(o.innerHTML=""),o.appendChild(d),s=!1,n?function(){
+for(var e=o.getElementsByClassName("reward_user_avatar"),t=i,n=e.length;n>t;t++)e[t].firstElementChild.src=H[r+t];
+}:!1;
+};
+n.innerHTML=d,t.getElementsByClassName("js_reward_pagination_totalpage")[0].innerHTML=a;
+var l="/mp/reward?act=getrewardheads&__biz="+biz+"&appmsgid="+mid+"&idx="+idx+"&sn="+sn+"&count="+z,u=null,_=function(t){
+var n=H.length;
+e.reward_total>n&&t*z>n?(u=null,u=c(t,!0),h({
+url:l+"&offset="+(t-1)*z+"#wechat_redirect",
+type:"GET",
+success:function(e){
+try{
+e=JSON.parse(e),e.reward_heads=JSON.parse(e.reward_heads).reward_heads;
+}catch(t){
+e={};
+}
+e.base_resp&&0===e.base_resp.ret&&(e.reward_heads.forEach(function(e){
+var t=A.indexOf(e);
+t>-1?A.splice(t,1):H.push(e);
+}),"function"==typeof u&&u());
+}
+})):c(t);
+};
+j<e.reward_total&&!function(){
+E.reward.classList.add("reward_avatar_overflow");
+for(var w=o.children[0];1!==w.nodeType;)w=reward.nextElementSibling;
+var c=getComputedStyle(w),l=w.offsetHeight+parseInt(c.marginBottom)+parseInt(c.marginTop);
+S=function(t){
+o.style.height="fold"===t?3*l+"px":a>d?l*Math.ceil(z/p)+"px":l*Math.ceil(e.reward_total%z/p)+"px";
+},S("fold"),m.on(R,"click",function(){
+E.reward.classList.contains("reward_avatar_unfold")?(E.reward.classList.remove("reward_avatar_unfold"),
+a>1&&i(t),S("fold")):(1===d&&s&&_(d),E.reward.classList.add("reward_avatar_unfold"),
+a>1&&r(t),S("unfold"));
+}),a>1&&m.on(t,"click",function(e){
+var t=e.target;
+if(t.classList.contains("js_reward_pagination_prev")){
+if(d--,n.innerHTML=d,_(d),1===d&&(t.disabled=!0),d===a-1){
+for(;t&&!t.classList.contains("js_reward_pagination_next");)t=t.nextElementSibling;
+t&&(t.disabled=!1),S("unfold");
+}
+}else if(t.classList.contains("js_reward_pagination_next")&&(d++,n.innerHTML=d,_(d),
+d===a&&(t.disabled=!0,S("unfold")),2===d)){
+for(;t&&!t.classList.contains("js_reward_pagination_prev");)t=t.previousElementSibling;
+t&&(t.disabled=!1);
+}
+});
+}(),R.dataset.hasEvent=1;
+}();
+}else M.setAttribute("data-href",_),M.getAttribute("data-hasevent")||(m.on(M,"click",function(){
+var e=M.getAttribute("data-href");
+return y(e,{
+sample:1,
+reject:function(){
+location.href=e;
+}
+}),!1;
+}),M.setAttribute("data-hasevent",1));
+}
+function w(e,t){
+var n=document.createElement("span");
+n.className="reward_user_avatar";
+var a=new Image;
+return a.onload=function(){
+window.logs&&window.logs.reward_heads_total++,a.onload=a.onerror=null;
+},a.onerror=function(){
+window.logs&&window.logs.reward_heads_total++,window.logs&&window.logs.reward_heads_fail++,
+a.onload=a.onerror=null;
+},a.src=t,n.appendChild(a),e.appendChild(n),n;
+}
+function c(e){
+var t=H.length?H:L;
+if(t.length){
+var n=document.getElementById("js_reward_list"),a=0,r=document.createDocumentFragment();
+if(n){
+var i=E.reward.classList.contains("reward_avatar_unfold");
+if("function"==typeof S&&S(i?"unfold":"fold"),!e){
+for(var d=0,s=t.length;s>d&&(a++,w(r,t[d]),i||a!==3*p)&&a!==(z||16*p);++d);
+a>p&&(n.className+=" tl"),n.innerHTML="",n.appendChild(r);
+}
+}
+return a;
+}
+}
+function l(){
+if(E.reward){
+var e=window.pageYOffset||document.documentElement.scrollTop;
+if(e+b.getInnerHeight()>E.reward.offsetTop){
+var t="__biz="+biz+"&appmsgid="+mid+"&idx="+idx+"&item_show_type="+item_show_type;
+window.cgiData&&window.cgiData.vid&&(t+="&vid="+cgiData.vid),h({
+type:"GET",
+url:"/bizmall/reward?act=report&"+t,
+async:!0
+}),m.off(window,"scroll",l),l=null;
+}
+}
+}
+function u(e){
+"undefined"!=typeof e.scene&&(T.scene=e.scene),"undefined"!=typeof e.is_need_reward&&(T.is_need_reward=e.is_need_reward),
+"undefined"!=typeof e.title&&(T.title=e.title),"undefined"!=typeof e.author_id&&(T.author_id=e.author_id),
+"undefined"!=typeof e.user_can_reward&&(T.user_can_reward=e.user_can_reward),"undefined"!=typeof e.appmsgextRtId&&(T.appmsgextRtId=e.appmsgextRtId),
+"undefined"!=typeof e.appmsgextRtKey&&(T.appmsgextRtKey=e.appmsgextRtKey),"undefined"!=typeof e.likeHeadId&&(T.likeHeadId=e.likeHeadId),
+"undefined"!=typeof e.likeHeadKey&&(T.likeHeadKey=e.likeHeadKey),"undefined"!=typeof e.likeBtnId&&(T.likeBtnId=e.likeBtnId),
+"undefined"!=typeof e.likeBtnKey&&(T.likeBtnKey=e.likeBtnKey),"undefined"!=typeof e.authorPageScene&&(T.authorPageScene=e.authorPageScene),
+"undefined"!=typeof e.authorPageRscene&&(T.authorPageRscene=e.authorPageRscene),
+"undefined"!=typeof e.devicetype&&(T.devicetype=e.devicetype),"undefined"!=typeof e.version&&(T.version=e.version),
+"undefined"!=typeof e.send_time&&(T.send_time=e.send_time);
+}
+e("biz_wap/ui/weui.js");
+var p,_,m=e("biz_common/dom/event.js"),h=e("biz_wap/utils/ajax.js"),f=e("biz_wap/jsapi/core.js"),g=(e("rt/appmsg/getappmsgext.rt.js"),
+e("biz_wap/utils/mmversion.js")),v=e("appmsg/appmsgext.js"),y=e("appmsg/open_url_with_webview.js"),b=e("common/utils.js"),x=e("biz_wap/utils/device.js"),I=e("appmsg/loading.js"),j=e("common/comm_report.js"),k=e("appmsg/pay_read_utils.js"),T={
+scene:window.source||"",
+is_need_reward:!1,
+title:window.msg_title||"",
+author_id:window.author_id||"",
+user_can_reward:!0,
+appmsgextRtId:"",
+appmsgextRtKey:"",
+likeHeadId:"110809",
+likeHeadKey:"2",
+likeBtnId:"110809",
+likeBtnKey:"3",
+authorPageScene:"142",
+authorPageRscene:"128",
+devicetype:window.devicetype||"",
+version:window.version||"",
+send_time:window.send_time||"",
+isWindowsWechat:-1!==window.navigator.userAgent.indexOf("WindowsWechat"),
+whisperMaxLen:40,
+focusTag:!1,
+doubleInputChar:["“”","‘’","（）","《》","〈〉","「」","『』","〔〕","【】","［］","[]","｛｝","{}","()","<>"],
+sendLock:!1
+},E={
+reward:document.getElementById("js_reward_area"),
+rewardLink:document.getElementById("js_reward_link"),
+authorAvatarLink:document.getElementById("js_reward_avatar"),
+rewardAuthorHead:document.getElementById("js_reward_author_head"),
+rewardLinkText:document.getElementById("js_reward_link_text"),
+rewardTotalText:document.getElementById("js_reward_total_text"),
+whisperWrap:document.getElementById("js_reward_whisper"),
+whisperDialogShow:document.getElementById("js_show_whisper_dialog"),
+whisperDialogHide:document.getElementById("js_hide_whisper_dialog"),
+whisperDialogMask:document.getElementById("js_whisper_dialog_mask"),
+whisperDialog:document.getElementById("js_reward_whisper_dialog"),
+whisperTextarea:document.getElementById("js_whisper_text"),
+whisperMsg:document.getElementById("js_whisper_msg"),
+whisperCnt:document.getElementById("js_whisper_current_cnt"),
+whisperSend:document.getElementById("js_whisper_send")
+},L=[],B=500,S=null,z=0,H=[];
+window.logs&&(window.logs.reward_heads_total=0,window.logs.reward_heads_fail=0);
+var A,M=function(e){
+var t=e.target;
+"TEXTAREA"!==t.tagName&&"BUTTON"!==t.tagName&&(e.preventDefault(),e.stopPropagation());
+},R=function(e){
+var t=e.targetTouches||[];
+if(t.length>0){
+var n=t[0]||{};
+A=n.clientY;
+}
+},D=function(e){
+var t=!1,n=e.changedTouches,a=this.scrollTop,r=this.offsetHeight,i=this.scrollHeight;
+if(n.length>0){
+var d=n[0]||{},s=d.clientY;
+t=s>A&&0>=a?!1:A>s&&a+r>=i?!1:!0,t||e.preventDefault();
+}
+},K=function(){
+document.addEventListener("touchmove",M,{
+passive:!1
+}),E.whisperTextarea.addEventListener("touchstart",R,{
+passive:!1
+}),E.whisperTextarea.addEventListener("touchmove",D,!1);
+},O=function(){
+document.removeEventListener("touchmove",M,{
+passive:!1
+}),E.whisperTextarea.removeEventListener("touchstart",R,{
+passive:!1
+}),E.whisperTextarea.removeEventListener("touchmove",D,!1);
+},W=function(){},C=function(){},P=document.getElementById("js_author_reward_qrcode_img"),N=function(){
+return r(E.whisperWrap);
+},q=function(){
+return i(E.whisperWrap);
+},F=!1,U=function(e){
+var t=0;
+try{
+t=1*window.atob(window.biz);
+}catch(n){}
+var a={
+BizUin:t,
+BizUinStr:window.biz||"",
+AppMsgId:window.parseInt(window.mid,10)||0,
+ItemIdx:window.parseInt(window.idx,10)||0,
+ItemShowType:window.parseInt(window.item_show_type,10)||0,
+SessionIdStr:window.sessionid||"",
+EnterId:window.parseInt(window.enterid,10)||0,
+Scene:window.parseInt(window.source,10)||0,
+SubScene:window.parseInt(window.subscene,10)||0,
+IsFans:1*e||0
+},d=function(e){
+return weui.alert(e&&e>T.whisperMaxLen?"悄悄话不可以超过字":"网络异常，请稍后重试");
+},s=function(){
+if(!E.whisperSend.disabled&&!T.sendLock){
+T.sendLock=!0,j.report(19048,_extends({
+EventType:3
+},a)),I.show("发送中");
+var e=E.whisperTextarea.value.replace(/^\s+|\s+$/g,"");
+h({
+url:"/mp/author?action=whisper",
+data:{
+__biz:window.biz||window.__biz,
+mid:window.mid||window.appmsgid,
+idx:window.idx,
+content:e,
+scene:window.source,
+subscene:window.subscene,
+enterid:window.enterid,
+sessionid:window.sessionid
+},
+type:"POST",
+success:function(t){
+try{
+t=JSON.parse(t);
+}catch(n){
+t={};
+}
+T.sendLock=!1,I.hide(),t&&t.base_resp&&0===t.base_resp.ret?(o(),q(),weui.toast("已发送",1e3)):d(e.length);
+},
+error:function(){
+T.sendLock=!1,I.hide(),d();
+}
+});
+}
+},o=function(){
+i(E.whisperDialog),E.whisperTextarea.value="",E.whisperSend.disabled=!0,O();
+};
+m.on(E.whisperDialogShow,"click",function(){
+j.report(19048,_extends({
+EventType:2
+},a)),r(E.whisperDialog),E.whisperTextarea.focus(),K();
+}),m.on(E.whisperDialogHide,"mousedown",o),m.on(E.whisperDialogMask,"mousedown",o),
+m.on(E.whisperTextarea,"input",function(e){
+var t=e.target.value.replace(/^\s+|\s+$/g,"").length;
+t>T.whisperMaxLen?(E.whisperSend.disabled=!0,E.whisperCnt.innerHTML=t,E.whisperMsg.style.visibility="visible"):(E.whisperSend.disabled=0===t,
+E.whisperMsg.style.visibility="hidden"),x.os.ios&&e.data&&T.doubleInputChar.indexOf(e.data)>-1&&(T.focusTag=!0);
+}),m.on(E.whisperTextarea,"click",function(e){
+if(x.os.ios&&T.focusTag){
+var t=e.target;
+t.blur(),t.focus(),T.focusTag=!1;
+}
+}),m.on(E.whisperSend,"mousedown",s);
+};
+return{
+handle:function(e,t){
+p=t,u(e),1==e.can_reward&&T.author_id&&E.reward&&U(e.isFans),o(e);
+},
+render:function(e){
+p=e,c(!0);
+},
+bindWhisperEvent:U,
+showWhisperWrap:N
+};
+});
